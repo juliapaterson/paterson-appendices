@@ -1,29 +1,5 @@
-%diary step6log
-clear all; clc; close all;
-pathOut = '/Users/juliapaterson/Documents/uni/psy4100/results/';
-load([pathOut 'participant_level_matrix.mat'])
-addpath(genpath('/Users/juliapaterson/Documents/github/honours-2021/matlab/CategoricalScatterplot/'))
-addpath(genpath('/Users/juliapaterson/Documents/github/honours-2021/matlab/RainCloudPlots/'))
-
-%% Only the included IDs (Comment this part if all IDs are considered)
-rows_to_remove = find(T.includedIDs ==0);
-T(rows_to_remove,:) = [];
-%% -------------------------------------------------------------------------------------------------
-% Overall RT
-% --------------------------------------------------------------------------------------------------
-
-close all;
-figure('color','w')
-
-CategoricalScatterplot(T.RT,'Group',T.Group,'Label',{'ADHD', 'Control'});
-yticks([500:200:1300])
-yticklabels([500:200:1300])
-ylabel('Overal RT (ms)')
-set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
-
-% Two-sample t-test within each group
-[h pvalue] = ttest2(T.RT(T.Group==1), T.RT(T.Group==2))
-
+diary step6log
+681
 %% -------------------------------------------------------------------------------------------------
 % RT by side
 % --------------------------------------------------------------------------------------------------
@@ -37,8 +13,8 @@ ylabel('Hemifield');
 xlabel('RT (ms)')
 
 % paired-t test within each group
-[h pvalueA] = ttest(T.RT_Left(T.Group==1), T.RT_Right(T.Group==1));
-[h pvalueB] = ttest(T.RT_Left(T.Group==2), T.RT_Right(T.Group==2));
+[h pvalueA ci stats]  = ttest(T.RT_Left(T.Group==1), T.RT_Right(T.Group==1));
+[h pvalueB ci stats]  = ttest(T.RT_Left(T.Group==2), T.RT_Right(T.Group==2));
 
 %% -------------------------------------------------------------------------------------------------
 % RT Assymetry
@@ -53,7 +29,7 @@ ylabel('RT Assymetry (ms)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.RT_Assymetry(T.Group==1), T.RT_Assymetry(T.Group==2))
+[h pvalue ci stats]  = ttest2(T.RT_Assymetry(T.Group==1), T.RT_Assymetry(T.Group==2))
 
 %% -------------------------------------------------------------------------------------------------
 % Overall Misses 
@@ -68,8 +44,7 @@ ylabel('Overal Misses')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.misses(T.Group==1), T.misses(T.Group==2))
-
+t
 %% -------------------------------------------------------------------------------------------------
 % Misses by side 
 % --------------------------------------------------------------------------------------------------
@@ -83,9 +58,8 @@ ylabel('Hemifield');
 xlabel('Misses')
 
 % paired-t test within each group
-[h pvalueA] = ttest(T.misses_left(T.Group==1), T.misses_right(T.Group==1))
-[h pvalueB] = ttest(T.misses_left(T.Group==2), T.misses_right(T.Group==2))
-
+[h pvalueA ci stats]  = ttest(T.misses_left(T.Group==1), T.misses_right(T.Group==1))
+1
 %% -------------------------------------------------------------------------------------------------
 % Spearman correlation between RT and CPP slope
 % --------------------------------------------------------------------------------------------------
@@ -508,7 +482,7 @@ xlim([350,1400]);xticks([350:350:1400]);xticklabels([350:350:1400])
 [corDifC, pvalDifC] = corr(T.RT_Right,T.N2iLatency_RightTarget,'type','Spearman')
 
 %% -------------------------------------------------------------------------------------------------
-% Compare CPP Slop between the two groups
+% Compare CPP Slope between the two groups
 % --------------------------------------------------------------------------------------------------
 % Left Target
 close all;
@@ -522,7 +496,7 @@ ylabel('CPP Slope (\muV/m^2/ms)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.CPP_slope_LeftTarget(T.Group==1), T.CPP_slope_LeftTarget(T.Group==2))
+[h pvalue ci stats]  = ttest2(T.CPP_slope_LeftTarget(T.Group==1), T.CPP_slope_LeftTarget(T.Group==2))
 
 % --------------------------------------------------------------------------------------------------
 % Right Target
@@ -537,7 +511,7 @@ ylabel('CPP Slope (\muV/m^2/ms)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.CPP_slope_RightTarget(T.Group==1), T.CPP_slope_RightTarget(T.Group==2))
+[h pvalue ci stats]  = ttest2(T.CPP_slope_RightTarget(T.Group==1), T.CPP_slope_RightTarget(T.Group==2))
 
 %% -------------------------------------------------------------------------------------------------
 %  Compare CPP Amplitude between the two groups
@@ -555,7 +529,7 @@ ylabel('CPP Amplitude (\muV)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.CPP_Amplitude_Left(T.Group==1), T.CPP_Amplitude_Left(T.Group==2))
+[h pvalue ci stats]  = ttest2(T.CPP_Amplitude_Left(T.Group==1), T.CPP_Amplitude_Left(T.Group==2))
 
 % --------------------------------------------------------------------------------------------------
 % Right Target
@@ -570,7 +544,7 @@ ylabel('CPP Amplitude (\muV)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.CPP_Amplitude_Right(T.Group==1), T.CPP_Amplitude_Right(T.Group==2))
+[h pvalue ci stats]  = ttest2(T.CPP_Amplitude_Right(T.Group==1), T.CPP_Amplitude_Right(T.Group==2))
 
 %% -------------------------------------------------------------------------------------------------
 % Compare CPP Onset latency between the two groups
@@ -597,7 +571,7 @@ nonzeroADHD_index = find(nonzeroADHD);
 nonzeroConrol  = T.StimlockedCPPOnset_LeftTarget(T.Group==2);
 nonzeroConrol_index = find(nonzeroConrol);
 nonzeroConrol_index_All  = nonzeroConrol_index+length(T.StimlockedCPPOnset_LeftTarget(T.Group==1));%add adhd subj length
-[h pvalue] = ttest2(T.StimlockedCPPOnset_LeftTarget(nonzeroADHD_index),nonzeroConrol(nonzeroConrol_index))
+[h pvalue ci stats]  = ttest2(T.StimlockedCPPOnset_LeftTarget(nonzeroADHD_index),nonzeroConrol(nonzeroConrol_index))
 
 % --------------------------------------------------------------------------------------------------
 % Right Target
@@ -619,7 +593,7 @@ nonzeroADHD_index = find(nonzeroADHD);
 nonzeroConrol  = T.StimlockedCPPOnset_RightTarget(T.Group==2);
 nonzeroConrol_index = find(nonzeroConrol);
 nonzeroConrol_index_All  = nonzeroConrol_index+length(T.StimlockedCPPOnset_RightTarget(T.Group==1));%add adhd subj length
-[h pvalue] = ttest2(T.StimlockedCPPOnset_RightTarget(nonzeroADHD_index),nonzeroConrol(nonzeroConrol_index))
+[h pvalue ci stats]  = ttest2(T.StimlockedCPPOnset_RightTarget(nonzeroADHD_index),nonzeroConrol(nonzeroConrol_index))
 
 %% -------------------------------------------------------------------------------------------------
 % Compare N2c Amplitude between the two groups
@@ -637,7 +611,7 @@ ylabel('N2c Amplitude (\muV)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.N2ciAmp_GA_ContraLeftTarget(T.Group==1), T.N2ciAmp_GA_ContraLeftTarget(T.Group==2))
+[h pvalue ci stats]  = ttest2(T.N2ciAmp_GA_ContraLeftTarget(T.Group==1), T.N2ciAmp_GA_ContraLeftTarget(T.Group==2))
 
 % --------------------------------------------------------------------------------------------------
 % Right Target
@@ -652,7 +626,7 @@ ylabel('N2c Amplitude (\muV)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.N2ciAmp_GA_ContraRightTarget(T.Group==1), T.N2ciAmp_GA_ContraRightTarget(T.Group==2))
+[h pvalue ci stats]  = ttest2(T.N2ciAmp_GA_ContraRightTarget(T.Group==1), T.N2ciAmp_GA_ContraRightTarget(T.Group==2))
 
 %% -------------------------------------------------------------------------------------------------
 % Compare N2c Onset Latency between the two groups
@@ -669,7 +643,7 @@ ylabel('N2c Onset Latency (ms)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.N2CLatency_LeftTarget(T.Group==1), T.N2CLatency_LeftTarget(T.Group==2))
+[h pvalue ci stats]  = ttest2(T.N2CLatency_LeftTarget(T.Group==1), T.N2CLatency_LeftTarget(T.Group==2))
 
 % --------------------------------------------------------------------------------------------------
 % Right Target
@@ -684,7 +658,7 @@ ylabel('N2c Onset Latency (ms)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.N2CLatency_RightTarget(T.Group==1), T.N2CLatency_RightTarget(T.Group==2))
+[h pvalue ci stats]  = ttest2(T.N2CLatency_RightTarget(T.Group==1), T.N2CLatency_RightTarget(T.Group==2))
 
 %% -------------------------------------------------------------------------------------------------
 % Compare N2i Amplitude between the two groups
@@ -701,8 +675,7 @@ ylabel('N2i Amplitude (\muV)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.N2ciAmp_GA_IpsiLeftTarget(T.Group==1), T.N2ciAmp_GA_IpsiLeftTarget(T.Group==2))
-
+[h pvalue ci stats]  = ttest2(T.N2ciAmp_GA_IpsiLeftTarget(T.Group==1), T.N2ciAmp_GA_IpsiLeftTarget(T.Group==2))
 
 % --------------------------------------------------------------------------------------------------
 % Right Target
@@ -717,7 +690,7 @@ ylabel('N2i Amplitude (\muV)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.N2ciAmp_GA_IpsiRightTarget(T.Group==1), T.N2ciAmp_GA_IpsiRightTarget(T.Group==2))
+[h pvalue ci stats]  = ttest2(T.N2ciAmp_GA_IpsiRightTarget(T.Group==1), T.N2ciAmp_GA_IpsiRightTarget(T.Group==2))
 
 %% -------------------------------------------------------------------------------------------------
 % Compare N2i Onset Latency between the two groups
@@ -734,7 +707,7 @@ ylabel('N2i Onset Latency (ms)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.N2iLatency_LeftTarget(T.Group==1), T.N2iLatency_LeftTarget(T.Group==2))
+[h pvalue ci stats]  = ttest2(T.N2iLatency_LeftTarget(T.Group==1), T.N2iLatency_LeftTarget(T.Group==2))
 
 % --------------------------------------------------------------------------------------------------
 % Right Target
@@ -749,7 +722,7 @@ ylabel('N2i Onset Latency (ms)')
 set(gca,'FontSize',16,'FontWeight','bold','linewidth',2)
 
 % Two-sample t-test within each group
-[h pvalue] = ttest2(T.N2iLatency_RightTarget(T.Group==1), T.N2iLatency_RightTarget(T.Group==2))
+[h pvalue ci stats]  = ttest2(T.N2iLatency_RightTarget(T.Group==1), T.N2iLatency_RightTarget(T.Group==2))
 
 %% -------------------------------------------------------------------------------------------------
 % Compare Left and Right Target Frontal negativity within each group
@@ -771,4 +744,5 @@ set(gca, 'XDir','reverse')
 % in the difference between left vs right target frontal negativity. This
 % plot is enough and you dont need to show the plots in the section above
 
-%diary off
+diary off
+
